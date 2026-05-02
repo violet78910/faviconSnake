@@ -1,4 +1,13 @@
-const init = () => {
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+const init = async () => {
   // Create Canvas Element
   canvas = document.createElement("canvas");
   ctx = canvas.getContext("2d");
@@ -14,17 +23,17 @@ const init = () => {
     showOnBody: false
   };
 
-  logo = new Image();
-  logo.src = 'assets/logo.png';
+  // Load Images
+  [favicon, logo, win, numbers] = await Promise.all([
+    loadImage('assets/favicon.png'),
+    loadImage('assets/logo.png'),
+    loadImage('assets/win.png'),
+    loadImage('assets/numbers.png')
+  ]);
 
-  favicon = new Image();
-  favicon.src = 'assets/favicon.png';
+  faviconLink = document.querySelector('link[rel="shortcut icon"]');
 
-  numbers =  new Image();
-  numbers.src = 'assets/numbers.png';
-
-  win = new Image();
-  win.src = 'assets/win.png';
+  previousFrame = '';
 
   snake = {
     fill: '#17ee17',
@@ -44,7 +53,7 @@ const init = () => {
   startGame();
   setInterval(gameLoop, 1000 / game.fps);
 
-} // End of Init
+}; // End of Init
 
 const setupInputs = () => {
 
@@ -105,7 +114,7 @@ const setupInputs = () => {
     }
   }
 
-}
+};
 
 function randNum(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -308,27 +317,19 @@ function drawCanvas() {
 function updateFavicon() {
 
   // Update Document Title with Score
-  if (snake.length > 0) {
-    document.title = `Favicon Snake - Score: ${snake.length}`;
-  } else {
-    document.title = 'Favicon Snake';
-  }
+  document.title = snake.length > 0 
+    ? `Favicon Snake - Score: ${snake.length}` 
+    : 'Favicon Snake';
 
-  // Remove Existing Favicon Link Elements if it exists
-  const existingLinks = document.querySelectorAll('link[rel="icon"]');
-  existingLinks.forEach(link => link.remove());
+  // Create DataURL
+  dataURL = canvas.toDataURL("image/png");
 
-  // Convert Canvas to Data URL
-  const dataURL = canvas.toDataURL("image/png");
+  // Compare to Previous Frame DataURL, if same, don't update
+  if (dataURL === previousFrame) return;
+  previousFrame = dataURL;
 
-  // Create Link Element for Favicon
-  const link = document.createElement("link");
-  link.rel = "icon";
-  link.type = "image/png";
-  link.href = dataURL;
-
-  // Append Link Element to Head
-  document.head.appendChild(link);
+  // Update Favicon link
+  faviconLink.href = dataURL;
 
 }
 
