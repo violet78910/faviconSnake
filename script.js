@@ -17,7 +17,7 @@ const init = async () => {
   canvas.height = 16;
 
   game = {
-    fps: 10,
+    fps: 8,
     state: 'start',
     previousState: 'start',
     showOnBody: false
@@ -138,9 +138,7 @@ function startGame() {
     randNum(canvas.height / 2, canvas.height - 2)
   ];
 
-  if (snake.head[1] == apple.pos[1]) {
-    apple.pos[1] -= 1;
-  }
+  if (snake.head[1] == apple.pos[1]) apple.pos[1] -= 1;
 
 }
 
@@ -177,10 +175,13 @@ function moveApple() {
 
 let gameLoop = () => {
 
-  if (!document.hasFocus() || document.hidden) {
-    if (game.state != 'pause' && game.state != 'outOfFocus') {
-      game.previousState = game.state;
-    }
+  if (
+    (!document.hasFocus() || document.hidden) 
+    && game.state != 'pause' 
+    && game.state != 'end' 
+    && game.state != 'win'
+  ) {
+    if (game.state != 'outOfFocus') game.previousState = game.state;
     game.state = 'outOfFocus';
   } else if (game.state == 'outOfFocus') {
     game.state = game.previousState;
@@ -317,9 +318,21 @@ function drawCanvas() {
 function updateFavicon() {
 
   // Update Document Title with Score
-  document.title = snake.length > 0 
-    ? `Favicon Snake - Score: ${snake.length}` 
-    : 'Favicon Snake';
+  let title = 'Favicon Snake - ';
+
+  if (game.state === 'end') {
+    title += 'Game Over';
+  } else if (game.state === 'win') {
+    title += 'You Win!';
+  } else if (game.state === 'pause') {
+    title += 'Paused';
+  } else if (snake.length > 0) {
+    title += `Score: ${snake.length}`;
+  } else {
+    title = 'Favicon Snake';
+  }
+
+  document.title = title;
 
   // Create DataURL
   dataURL = canvas.toDataURL("image/png");
