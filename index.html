@@ -5,27 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Favicon Snake</title>
   <link rel="shortcut icon" href="assets/favicon.svg" type="image/x-icon">
-  <style>
-    canvas {
-      image-rendering: pixelated;
-      width: 256px;
-      height: 256px;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Favicon Snake</h1>
-  <p>Experience the classic game known as Snake as a Favicon!</p>
-
-  <h2>How to Play</h2>
-  <ul>
-    <li>Look at your browser tab icon (Above the URL Bar)</li>
-    <li>Use WASD or Arrow Keys to control the snake</li>
-    <li>Press Escape to pause and unpause the game</li>
-    <li>Press Space to restart the game</li>
-    <li>Eat apples to grow longer</li>
-    <li>Be careful not to run into yourself; however, running into walls won't kill you</li>
-  </ul>
+  <header>
+    <h1 id="title">Favicon Snake</h1>
+    <h4 id="instructions"></h4>
+    <p>Experience the classic game known as Snake as a Favicon!</p>
+  </header>
+  <section class="scores">
+      Score: <span id="score" class="score">0</span><br>
+      <span id="hsTxt">High Score: </span>
+      <span id="highScore" class="score">0</span>
+  </section>
+  <section>
+    <h2>How to Play</h2>
+    <ul>
+      <li>Look at your browser tab icon (above the URL Bar)</li>
+      <li>Use WASD or Arrow Keys to control the snake</li>
+      <li>Press Escape to pause and unpause the game</li>
+      <li>Press Space to restart the game</li>
+      <li>Eat apples to grow longer</li>
+      <li>Be careful not to run into yourself; however, running into walls won't kill you</li>
+    </ul>
+  </section>
   <script src="script.js"></script>
 </body>
 </html>
